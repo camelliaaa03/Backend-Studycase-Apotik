@@ -39,6 +39,18 @@ module.exports = app => {
         }
     });
 
+    router.get('/:id', async (req, res) => {
+      try {
+      // Mengambil semua data dari model Order
+      const orders = await order.findOne();
+  
+      res.status(200).json(orders);
+      } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+      }
+  });
+
     router.delete('/:id', async (req, res) => {
       const orderId = req.params.id;
     
