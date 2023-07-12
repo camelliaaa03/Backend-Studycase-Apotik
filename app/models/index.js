@@ -56,11 +56,15 @@ db.cart.belongsTo(db.products, {
 });
 
 db.order.hasMany(db.products, {
-  foreignKey: "orderId",
+  foreignKey: "productId",
+});
+
+db.products.hasMany(db.order, {
+  foreignKey: "productId",
 });
 
 db.order.belongsTo(db.cart, {
-  foreignKey: "orderId",
+  foreignKey: "cartId",
 });
 
 db.ROLES = ["admin", "kasir"];
