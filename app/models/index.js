@@ -60,7 +60,7 @@ db.order.hasMany(db.products, {
 });
 
 db.products.hasMany(db.order, {
-  foreignKey: "productId",
+  foreignKey: "orderId",
 });
 
 db.order.belongsTo(db.cart, {
