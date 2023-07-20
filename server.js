@@ -27,11 +27,6 @@ db.sequelize.sync()
         initial();
     });
 
-// db.sequelize.sync({force: true}).then(() => {
-//     console.log('Drop and Resync Db');
-//     initial();
-// });
-
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to Sistem Layanan Apotik application." });
 });

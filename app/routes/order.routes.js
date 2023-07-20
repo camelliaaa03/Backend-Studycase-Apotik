@@ -4,13 +4,12 @@ module.exports = app => {
     const router = express.Router();
     const db = require('../models');
     const order = db.order;
-    
-    // POST untuk membuat data baru
+    const authJwt = require('../middleware/authJwt');
+
     router.post('/', async (req, res) => {
       try {
         const { productCount, total, customerName } = req.body;
-    
-        // Membuat data baru menggunakan model CartItemFinal
+
         const newOrder = await order.create({
           productCount,
           total,
@@ -23,13 +22,9 @@ module.exports = app => {
         res.status(500).json({ message: 'Internal server error' });
       }
     });
-    
-    
 
-    // GET untuk mengambil data
     router.get('/', async (req, res) => {
         try {
-        // Mengambil semua data dari model Order
         const orders = await order.findAll();
     
         res.status(200).json(orders);
@@ -41,7 +36,6 @@ module.exports = app => {
 
     router.get('/:id', async (req, res) => {
       try {
-      // Mengambil semua data dari model Order
       const orders = await order.findOne();
   
       res.status(200).json(orders);
@@ -51,11 +45,10 @@ module.exports = app => {
       }
   });
 
-    router.delete('/:id', async (req, res) => {
+    router.delete('/:id', authJwt.verifyToken, authJwt.isAdmin, async (req, res) => {
       const orderId = req.params.id;
     
       try {
-        // Cari dan hapus data order berdasarkan id
         const deletedOrder = await order.destroy({ where: { id: orderId } });
     
         if (deletedOrder) {

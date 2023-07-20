@@ -23,12 +23,9 @@ module.exports = app => {
     router.post('/', async (req, res) => {
         let { productId, quantity, name, price } = req.body;
 
-        // quantity = 1
             const existingCartItem = await Cart.findOne({
                 where: { productId }
             });
-
-            // const product = await Product.findByPk(productId);
             const data = {
                 productId: productId,
                 quantity: quantity,
@@ -37,12 +34,9 @@ module.exports = app => {
             };
 
             if (existingCartItem) {
-                // Jika produk sudah ada, update jumlahnya
                 existingCartItem.quantity += quantity;
                 await existingCartItem.save();
             } else {
-                // Jika produk belum ada, tambahkan sebagai item baru di keranjang
-                // const product = await Product.findByPk(productId);
                 Cart.create(data)
                 .then(res => {
                     console.log(res)
@@ -52,9 +46,6 @@ module.exports = app => {
                     res.status(500).json({ message: 'internal server error', error: err.message });
                 })
             }
-        
-            // ...
-        
             res.status(201).json({ message: 'Product added to cart'});
     });
 
@@ -65,15 +56,11 @@ module.exports = app => {
           if (!cartItem) {
             return res.status(404).json({ message: 'Cart item not found' });
           }
-    
-          // Kurangi quantity jika item ditemukan
           cartItem.quantity -= 1;
     
           if (cartItem.quantity <= 0) {
-            // Hapus item jika quantity mencapai 0
             await cartItem.destroy();
           } else {
-            // Simpan perubahan jika quantity masih tersisa
             await cartItem.save();
           }
     
@@ -85,7 +72,6 @@ module.exports = app => {
 
       router.delete('/', async (req, res) => {
         try {
-          // Hapus semua item dalam tabel cartItems
           await Cart.destroy({ where: {} });
       
           res.json({ message: 'All cart items deleted' });
